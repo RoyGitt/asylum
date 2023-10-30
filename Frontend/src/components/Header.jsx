@@ -28,7 +28,7 @@ const Header = () => {
             <Link to="/about">About</Link>
           </li>
           <li className="cursor-pointer ">
-            <Link to="/sign-in"> Sign In</Link>
+            <Link to="/sign-up"> Sign Up</Link>
           </li>
         </ul>
       </div>
