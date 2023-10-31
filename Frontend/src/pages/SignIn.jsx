@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInFail,
+  signInStart,
+  signInSuccess,
+} from "../redux/user/user.slice";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({});
   const [inputError, setInputError] = useState(null);
-  const [submitError, setSubmitError] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState({});
+
+  const { loading, error } = useSelector((state) => state.user);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setFormData({
@@ -25,29 +31,27 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    dispatch(signInStart());
     try {
-      setLoading(true);
       const res = await fetch("api/auth/signin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      setData(data);
+
       if (data.success === false) {
-        setSubmitError(true);
-        setLoading(false);
+        const error = new Error();
+        error.message = data.message;
+        throw error;
       }
       if (data.email) {
+        dispatch(signInSuccess(data));
         navigate("/home");
       }
     } catch (error) {
-      setLoading(false);
-      setSubmitError(false);
+      dispatch(signInFail(error.message));
     }
-
-    console.log(submitError);
   };
 
   return (
@@ -61,6 +65,7 @@ const SignUp = () => {
             placeholder="email"
             id="email"
             onChange={handleChange}
+            required
           />
           <input
             className="mb-3 py-1 px-4 text-lg rounded-md focus:outline-none"
@@ -68,22 +73,23 @@ const SignUp = () => {
             placeholder="password"
             id="password"
             onChange={handleChange}
+            required
           />
           <button
             disabled={inputError}
             className="bg-slate-700 text-white py-2 rounded-md text-xl uppercase hover:opacity-90 disabled:opacity-60 "
           >
-            {loading ? "Loading..." : "Sign up"}
+            {loading ? "Loading..." : "Sign in"}
           </button>
         </form>
       </div>
       <div className="flex gap-1 mt-3">
-        <p>Have an account?</p>
+        <p>Create an account?</p>
         <Link to="/sign-up">
           <span className="text-[#5352ed]">Sign Up</span>
         </Link>
       </div>
-      {submitError && <p className="mt-3 text-[#eb4d4b]">{data.message}</p>}
+      {error && <p className="mt-3 text-[#eb4d4b]">{error}</p>}
     </div>
   );
 };
