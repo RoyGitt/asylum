@@ -39,11 +39,8 @@ const SignUp = () => {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-
       if (data.success === false) {
-        const error = new Error();
-        error.message = data.message;
-        throw error;
+        dispatch(signInFail(data.message));
       }
       if (data.email) {
         dispatch(signInSuccess(data));
