@@ -6,15 +6,18 @@ import {
   signInStart,
   signInSuccess,
 } from "../redux/user/user.slice";
+import Oauth from "../components/Oauth";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({});
   const [inputError, setInputError] = useState(null);
 
-  const { loading, error } = useSelector((state) => state.user);
+  const { loading, error, currentUser } = useSelector((state) => state.user);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  console.log(currentUser);
 
   const handleChange = (e) => {
     setFormData({
@@ -44,7 +47,7 @@ const SignUp = () => {
       }
       if (data.email) {
         dispatch(signInSuccess(data));
-        navigate("/home");
+        navigate("/");
       }
     } catch (error) {
       dispatch(signInFail(error.message));
@@ -78,6 +81,7 @@ const SignUp = () => {
           >
             {loading ? "Loading..." : "Sign in"}
           </button>
+          <Oauth />
         </form>
       </div>
       <div className="flex gap-1 mt-3">

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Oauth from "../components/Oauth";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({});
@@ -77,10 +78,11 @@ const SignUp = () => {
           />
           <button
             disabled={inputError}
-            className="bg-slate-700 text-white py-2 rounded-md text-xl uppercase hover:opacity-90 disabled:opacity-60 "
+            className="bg-slate-700 text-white py-1 rounded-md text-xl uppercase hover:opacity-90 disabled:opacity-60 cursor-pointer"
           >
             {loading ? "Loading..." : "Sign up"}
           </button>
+          <Oauth />
         </form>
       </div>
       <div className="flex gap-1 mt-3">

@@ -22,7 +22,7 @@ const Header = () => {
         </form>
         <ul className="flex gap-5 items-center font-semibold text-lg text-slate-700">
           <li className="cursor-pointer ">
-            <Link to="/home">Home</Link>
+            <Link to="/">Home</Link>
           </li>
           <li className="cursor-pointer ">
             <Link to="/about">About</Link>
