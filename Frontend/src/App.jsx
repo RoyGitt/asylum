@@ -18,7 +18,6 @@ const App = () => {
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/about" element={<About />} />
-        Hello
       </Routes>
     </BrowserRouter>
   );
