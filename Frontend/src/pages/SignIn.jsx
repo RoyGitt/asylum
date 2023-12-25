@@ -58,9 +58,9 @@ const SignUp = () => {
     <div className="max-w-lg mx-auto p-2">
       <div className="flex flex-col ">
         <h1 className="text-4xl text-center my-[40px] font-bold">Sign In</h1>
-        <form className="flex flex-col " onSubmit={handleSubmit}>
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <input
-            className="mb-3 py-1 px-4 text-lg rounded-md focus:outline-none"
+            className="py-1 px-4 text-lg rounded-md focus:outline-none"
             type="email"
             placeholder="email"
             id="email"
@@ -68,7 +68,7 @@ const SignUp = () => {
             required
           />
           <input
-            className="mb-3 py-1 px-4 text-lg rounded-md focus:outline-none"
+            className="py-1 px-4 text-lg rounded-md focus:outline-none"
             type="password"
             placeholder="password"
             id="password"

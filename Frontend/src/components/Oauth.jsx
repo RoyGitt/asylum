@@ -9,6 +9,8 @@ import {
 } from "../redux/user/user.slice";
 import { useNavigate } from "react-router-dom";
 
+import { FcGoogle } from "react-icons/fc";
+
 const Oauth = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -42,9 +44,9 @@ const Oauth = () => {
     <button
       type="button"
       onClick={handleGoogleAuth}
-      className="bg-[#e67e22] text-white py-1 rounded-md text-xl capitalize mt-3"
+      className="flex items-center justify-center gap-3 bg-slate-50 shadow-sm text-slate-700  py-1 rounded-md text-xl capitalize"
     >
-      Continue with google
+      Continue with google <FcGoogle />
     </button>
   );
 };

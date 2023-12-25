@@ -40,9 +40,15 @@ const Header = () => {
           </li>
         </ul>
         {toggleMenu ? (
-          <MdOutlineClose className="text-5xl" onClick={toggleMenuHandler} />
+          <MdOutlineClose
+            className="text-5xl sm:hidden block"
+            onClick={toggleMenuHandler}
+          />
         ) : (
-          <RiMenu3Fill className="text-5xl" onClick={toggleMenuHandler} />
+          <RiMenu3Fill
+            className="text-5xl sm:hidden block"
+            onClick={toggleMenuHandler}
+          />
         )}
 
         <ul

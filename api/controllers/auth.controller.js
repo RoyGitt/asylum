@@ -23,11 +23,11 @@ export const signin = async (req, res, next) => {
     const validPassword = bcrypt.compareSync(password, user.password);
     if (!validPassword) return next(errorHandler(401, "Wrong Credentials!"));
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-    const { password: pass, ...rest } = user._doc;
+    const { password: pass, ...modifiedData } = user._doc;
     res
       .cookie("access_token", token, { httpOnly: true })
       .status(200)
-      .json(rest);
+      .json(modifiedData);
   } catch (error) {
     next(error);
   }
@@ -39,22 +39,23 @@ export const google = async (req, res, next) => {
     const user = await User.findOne({ email });
     if (user) {
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-      const { password: pass, ...rest } = user._doc;
-      res
+      const { password: pass, ...modifiedData } = user._doc;
+      return res
         .cookie("access_token", token, { httpOnly: true })
         .status(200)
-        .json(user._doc);
+        .json(modifiedData);
     }
     const generatedPassword =
       Math.random.toString(36).slice(-8) + Math.random.toString(36).slice(-8);
     const hashedPassword = bcrypt.hashSync(generatedPassword, 10);
     const newUser = await User({
-      username,
+      username: username.split(" ").join("").Math.random.toString(36).slice(-4),
       email,
       password: hashedPassword,
       avatar,
     });
     await newUser.save();
+    res.status(201).json("User created successfully");
   } catch (error) {
     next(error);
   }
