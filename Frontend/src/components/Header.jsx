@@ -81,7 +81,11 @@ const Header = () => {
           <li className="cursor-pointer ">
             {currentUser ? (
               <Link to="/profile">
-                <img src={currentUser.avatar} alt="profile" />
+                <img
+                  src={currentUser.avatar}
+                  alt="profile"
+                  className="w-10 h-10 rounded-full object-cover"
+                />
               </Link>
             ) : (
               <Link to="/sign-up"> Sign Up</Link>
