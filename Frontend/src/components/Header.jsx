@@ -3,9 +3,14 @@ import { Link } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import { RiMenu3Fill } from "react-icons/ri";
 import { MdOutlineClose } from "react-icons/md";
+import { useSelector } from "react-redux";
 
 const Header = () => {
   const [toggleMenu, setToggleMenu] = useState(false);
+
+  const { currentUser } = useSelector((state) => state.user);
+
+  console.log(currentUser);
 
   const toggleMenuHandler = () => {
     setToggleMenu((prev) => !prev);
@@ -36,7 +41,17 @@ const Header = () => {
             <Link to="/about">About</Link>
           </li>
           <li className="cursor-pointer ">
-            <Link to="/sign-up"> Sign Up</Link>
+            {currentUser ? (
+              <Link to="/profile">
+                <img
+                  src={currentUser.avatar}
+                  alt="profile"
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+              </Link>
+            ) : (
+              <Link to="/sign-up"> Sign Up</Link>
+            )}
           </li>
         </ul>
         {toggleMenu ? (
@@ -64,7 +79,13 @@ const Header = () => {
             <Link to="/about">About</Link>
           </li>
           <li className="cursor-pointer ">
-            <Link to="/sign-up"> Sign Up</Link>
+            {currentUser ? (
+              <Link to="/profile">
+                <img src={currentUser.avatar} alt="profile" />
+              </Link>
+            ) : (
+              <Link to="/sign-up"> Sign Up</Link>
+            )}
           </li>
         </ul>
       </div>
