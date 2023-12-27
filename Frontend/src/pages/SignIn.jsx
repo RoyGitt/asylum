@@ -49,6 +49,7 @@ const SignUp = () => {
         dispatch(signInSuccess(data));
         navigate("/");
       }
+      setFormData({});
     } catch (error) {
       dispatch(signInFail(error.message));
     }

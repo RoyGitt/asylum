@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import { RiMenu3Fill } from "react-icons/ri";
@@ -7,10 +7,7 @@ import { useSelector } from "react-redux";
 
 const Header = () => {
   const [toggleMenu, setToggleMenu] = useState(false);
-
   const { currentUser } = useSelector((state) => state.user);
-
-  console.log(currentUser);
 
   const toggleMenuHandler = () => {
     setToggleMenu((prev) => !prev);

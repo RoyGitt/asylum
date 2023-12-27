@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import User from "../models/user.model.js";
 import { errorHandler } from "../utils/error.js";
 import bcrypt from "bcrypt";
@@ -7,16 +8,40 @@ export const test = (req, res) => {
 };
 
 export const updateUser = async (req, res, next) => {
-  const user = req.user;
+  if (req.user.id !== req.params.id)
+    return next(errorHandler(401, "You can only update your own account!"));
 
-  if (user.id !== req.params.id) {
-    return next(errorHandler(401, "You can only update your own account"));
+  if (
+    !req.body.username &&
+    !req.body.email &&
+    !req.body.password &&
+    !req.body.avatar
+  ) {
+    return next(errorHandler(400, "Nothing to Update"));
   }
 
   try {
     if (req.body.password) {
       req.body.password = bcrypt.hashSync(req.body.password, 10);
     }
+
+    const existingUsername = await User.findOne({
+      username: req.body.username,
+    });
+
+    if (existingUsername) {
+      return next(errorHandler(400, "Username is already taken"));
+    }
+
+    const existingEmail = await User.findOne({
+      email: req.body.email,
+    });
+    if (existingEmail) {
+      return next(
+        errorHandler(400, "An account is already created with that email")
+      );
+    }
+
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
       {
@@ -30,10 +55,10 @@ export const updateUser = async (req, res, next) => {
       { new: true }
     );
 
-    const { password, ...modifiedUser } = updatedUser;
+    const { password, ...rest } = updatedUser._doc;
 
-    res.status(200).json(modifiedUser);
-  } catch (err) {
-    next(err);
+    res.status(200).json(rest);
+  } catch (error) {
+    next(error);
   }
 };
