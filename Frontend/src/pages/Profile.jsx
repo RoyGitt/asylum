@@ -126,6 +126,19 @@ const Profile = () => {
     }
   };
 
+  const singOutHandler = async () => {
+    try {
+      const res = await fetch(`/api/auth/signout/${currentUser._id}`);
+      const data = res.json;
+
+      if (data.success === false) {
+        return;
+      }
+    } catch (error) {
+      
+    }
+  };
+
   return (
     <main>
       <section className="py-16 w-full max-w-xl mx-auto">
@@ -205,7 +218,10 @@ const Profile = () => {
           >
             Delete Account
           </button>
-          <button className="bg-red-400 text-white py-2 px-4 rounded-md font-semibold">
+          <button
+            className="bg-red-400 text-white py-2 px-4 rounded-md font-semibold"
+            onClick={singOutHandler}
+          >
             Sign Out
           </button>
         </div>
