@@ -68,3 +68,16 @@ export const google = async (req, res, next) => {
     next(error);
   }
 };
+
+export const signOut = (req, res) => {
+  if (req.user.id === req.params.id)
+    return next(
+      errorHandler(401, "You can only logout from your own account 😂")
+    );
+  try {
+    res.clearCookie("access_token");
+    res.json({ message: "Signed out successfully" });
+  } catch (error) {
+    next(error);
+  }
+};

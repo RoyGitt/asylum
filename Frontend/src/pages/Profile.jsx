@@ -8,13 +8,17 @@ import {
   getStorage,
 } from "firebase/storage";
 import {
+  deleteFail,
+  deleteStart,
+  deleteSuccess,
   updateFail,
   updateStart,
   updateSuccess,
 } from "../redux/user/user.slice";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
-  const { currentUser, error, success } = useSelector((state) => state.user);
+  const { currentUser, error } = useSelector((state) => state.user);
   console.log(currentUser);
   const dispatch = useDispatch();
   const fileRef = useRef();
@@ -22,6 +26,11 @@ const Profile = () => {
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
+
+  const [data, setData] = useState({});
+  console.log(data);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (file) {
@@ -84,8 +93,10 @@ const Profile = () => {
       const data = await res.json();
       if (data.success === false) {
         dispatch(updateFail(data.message));
+        setData(data);
         return;
       }
+      setData(data);
 
       dispatch(updateSuccess(data));
     } catch (error) {
@@ -93,7 +104,27 @@ const Profile = () => {
     }
   };
 
-  console.log(formData.lenght === 0);
+  const deleteUserAccount = async () => {
+    try {
+      deleteStart();
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+
+      if (data.success === false) {
+        deleteFail(data.message);
+        return;
+      }
+      deleteSuccess();
+      navigate("/sign-in");
+
+      console.log(data);
+    } catch (error) {
+      deleteFail(error.message);
+    }
+  };
 
   return (
     <main>
@@ -168,18 +199,23 @@ const Profile = () => {
           </button>
         </form>
         <div className="flex justify-between  p-4">
-          <button className="bg-red-400 text-white py-2 px-4 rounded-md font-semibold">
+          <button
+            className="bg-red-400 text-white py-2 px-4 rounded-md font-semibold"
+            onClick={deleteUserAccount}
+          >
             Delete Account
           </button>
           <button className="bg-red-400 text-white py-2 px-4 rounded-md font-semibold">
             Sign Out
           </button>
         </div>
-        {!error ? (
+        {!error && data._id && (
           <p className="text-green-500 text-center font-semibold">
             Successfully Updated!
           </p>
-        ) : (
+        )}
+
+        {error && data.message && (
           <p className="text-red-500 text-center font-semibold">
             Error : {error}! 🥲
           </p>
