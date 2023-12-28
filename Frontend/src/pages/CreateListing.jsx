@@ -1,4 +1,100 @@
-const Listing = () => {
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import app from "../../firebase";
+import { useState } from "react";
+
+const CreateListing = () => {
+  const [files, setFiles] = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const [imageUploadError, setImageUploadError] = useState(false);
+
+  const [formData, setFormData] = useState({
+    imageUrls: [],
+    name: "",
+    description: "",
+    address: "",
+    type: "rent",
+    bedrooms: 1,
+    bathrooms: 1,
+    regularPrice: 50,
+    discountPrice: 0,
+    offer: false,
+    parking: false,
+    furnished: false,
+  });
+  console.log(formData.imageUrls);
+
+  const imageSubmitHandler = (e) => {
+    if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
+      setUploading(true);
+      setImageUploadError(false);
+      const promises = [];
+
+      for (let i = 0; i < files.length; i++) {
+        promises.push(storeImage(files[i]));
+      }
+
+      console.log(promises);
+      Promise.all(promises)
+        .then((urls) => {
+          setFormData({
+            ...formData,
+            imageUrls: formData.imageUrls.concat(urls),
+          });
+          setImageUploadError(false);
+          setUploading(false);
+        })
+        .catch((err) => {
+          setImageUploadError("Image upload failed (2 mb max per image)");
+          setUploading(false);
+        });
+    } else {
+      setImageUploadError("You can only upload 6 images per listing");
+      setUploading(false);
+    }
+  };
+
+  const storeImage = async (file) => {
+    return new Promise((resolve, reject) => {
+      const storage = getStorage(app);
+      const fileName = new Date().getTime() + file.name;
+      const storageRef = ref(storage, fileName);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(`Upload is ${progress}% done`);
+        },
+        (error) => {
+          reject(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            resolve(downloadURL);
+          });
+        }
+      );
+    });
+  };
+
+  const imageDeleteHandler = (url) => {
+    console.log(url);
+    const newImageUrlArray = formData.imageUrls.filter(
+      (imageURL) => imageURL !== url
+    );
+    console.log(newImageUrlArray);
+
+    setFormData((prev) => {
+      return { ...prev, imageUrls: newImageUrlArray };
+    });
+  };
+
   return (
     <main className="p-3 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">
@@ -120,35 +216,56 @@ const Listing = () => {
               id="images"
               accept="image/*"
               multiple
+              onChange={(e) => setFiles(e.target.files)}
             />
             <button
               type="button"
+              disabled={uploading}
+              onClick={imageSubmitHandler}
               className="p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80"
-            ></button>
-          </div>
-          <p className="text-red-700 text-sm"></p>
-
-          <div className="flex justify-between p-3 border items-center">
-            <img
-              alt="listing image"
-              className="w-20 h-20 object-contain rounded-lg"
-            />
-            <button
-              type="button"
-              className="p-3 text-red-700 rounded-lg uppercase hover:opacity-75"
             >
-              Delete
+              {uploading ? "Uploading..." : "Upload"}
             </button>
           </div>
+          <p className="text-red-700 text-sm">
+            {imageUploadError && imageUploadError}
+          </p>
+
+          {formData.imageUrls.map((url) => {
+            return (
+              <div
+                className="flex justify-between p-3 border items-center"
+                key={url}
+              >
+                <img
+                  src={url}
+                  alt="listing image"
+                  className="w-20 h-20 object-contain rounded-lg"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    imageDeleteHandler(url);
+                  }}
+                  className="p-3 text-red-700 rounded-lg uppercase hover:opacity-75"
+                >
+                  Delete
+                </button>
+              </div>
+            );
+          })}
 
           <button
+            type="submit"
             disabled={false}
             className="p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
-          ></button>
+          >
+            ADD
+          </button>
           <p className="text-red-700 text-sm"></p>
         </div>
       </form>
     </main>
   );
 };
-export default Listing;
+export default CreateListing;
