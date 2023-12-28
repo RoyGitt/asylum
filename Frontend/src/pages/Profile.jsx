@@ -11,6 +11,10 @@ import {
   deleteFail,
   deleteStart,
   deleteSuccess,
+  signInStart,
+  signOutFail,
+  signOutStart,
+  signOutSuccess,
   updateFail,
   updateStart,
   updateSuccess,
@@ -128,14 +132,17 @@ const Profile = () => {
 
   const singOutHandler = async () => {
     try {
+      dispatch(signOutStart());
       const res = await fetch(`/api/auth/signout/${currentUser._id}`);
       const data = res.json;
 
       if (data.success === false) {
+        dispatch(signOutFail(data.message));
         return;
       }
+      dispatch(signOutSuccess());
     } catch (error) {
-      
+      dispatch(signOutFail(error.message));
     }
   };
 
@@ -206,9 +213,19 @@ const Profile = () => {
           />
           <button
             disabled={false}
-            className="bg-green-500 text-white font-semibold text-xl py-2 disabled:bg-slate-500 disabled:opacity-70"
+            type="submit"
+            className="bg-blue-700 text-white font-semibold text-xl py-2 disabled:bg-slate-500 disabled:opacity-70"
           >
             Update
+          </button>
+          <button
+            disabled={false}
+            className="bg-green-500 text-white font-semibold text-xl py-2 disabled:bg-slate-500 disabled:opacity-70"
+            onClick={() => {
+              navigate("/create-listing");
+            }}
+          >
+            CREATE LISTING
           </button>
         </form>
         <div className="flex justify-between  p-4">
