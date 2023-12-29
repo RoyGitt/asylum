@@ -308,7 +308,7 @@ const Profile = () => {
                 className="border rounded-lg p-3 flex justify-between items-center gap-4"
               >
                 <Link to={`/listing/${listing._id}`}>
-                  {console.log(listing)}
+                  {console.log(`/update-listing/${listing._id}`)}
                   <img
                     src={listing.imageUrls[0]}
                     alt="listing cover"
