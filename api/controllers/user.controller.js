@@ -2,6 +2,7 @@ import { ObjectId } from "mongodb";
 import User from "../models/user.model.js";
 import { errorHandler } from "../utils/error.js";
 import bcrypt from "bcrypt";
+import Listing from "../models/listing.model.js";
 
 export const test = (req, res) => {
   res.json({ message: "Test" });
@@ -65,12 +66,26 @@ export const updateUser = async (req, res, next) => {
 
 export const deleteUser = async (req, res, next) => {
   if (req.user.id !== req.params.id) {
-    next(errorHandler("401", "You can only update your own account"));
+    next(errorHandler("401", "You can only update your own account 😂"));
   }
   try {
     await User.findByIdAndDelete(req.params.id);
     res.clearCookie("access_token");
     res.status(200).json({ message: "Successfully Deleted" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUserPost = async (req, res, next) => {
+  if (req.params.id !== req.user.id) {
+    next(errorHandler("401", "You can only view your own listings 🌚"));
+  }
+
+  try {
+    const listings = await Listing.find({ userRef: req.params.id });
+
+    res.json(listings);
   } catch (error) {
     next(error);
   }
