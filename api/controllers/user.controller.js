@@ -66,7 +66,7 @@ export const updateUser = async (req, res, next) => {
 
 export const deleteUser = async (req, res, next) => {
   if (req.user.id !== req.params.id) {
-    next(errorHandler("401", "You can only update your own account 😂"));
+    return next(errorHandler("401", "You can only update your own account 😂"));
   }
   try {
     await User.findByIdAndDelete(req.params.id);
@@ -79,7 +79,7 @@ export const deleteUser = async (req, res, next) => {
 
 export const getUserPost = async (req, res, next) => {
   if (req.params.id !== req.user.id) {
-    next(errorHandler("401", "You can only view your own listings 🌚"));
+    return next(errorHandler("401", "You can only view your own listings 🌚"));
   }
 
   try {
