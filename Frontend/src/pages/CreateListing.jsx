@@ -6,11 +6,19 @@ import {
 } from "firebase/storage";
 import app from "../../firebase";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const CreateListing = () => {
   const [files, setFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [imageUploadError, setImageUploadError] = useState(false);
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const { currentUser } = useSelector((state) => state.user);
+  console.log(currentUser._id);
 
   const [formData, setFormData] = useState({
     imageUrls: [],
@@ -95,18 +103,84 @@ const CreateListing = () => {
     });
   };
 
+  const handleChange = (e) => {
+    if (e.target.id === "sale" || e.target.id === "rent") {
+      setFormData((prev) => {
+        return {
+          ...prev,
+          type: e.target.id,
+        };
+      });
+    }
+
+    if (
+      e.target.id === "furnished" ||
+      e.target.id === "parking" ||
+      e.target.id === "offer"
+    ) {
+      setFormData((prev) => {
+        return { ...prev, [e.target.id]: e.target.checked };
+      });
+    }
+    if (
+      e.target.type === "text" ||
+      e.target.type === "number" ||
+      e.target.type === "textarea"
+    ) {
+      setFormData((prev) => {
+        return { ...prev, [e.target.id]: e.target.value };
+      });
+    }
+  };
+  const createListingHandler = async (e) => {
+    e.preventDefault();
+    if (formData.regularPrice < formData.discountPrice) {
+      setError("Regular price must be more than the discounted price");
+      return;
+    }
+    try {
+      setError(false);
+      setLoading(true);
+      const res = await fetch("/api/listings/create-listing", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...formData, userRef: currentUser._id }),
+      });
+
+      const data = res.json();
+
+      if (data.success === false) {
+        setError(data.message);
+        setLoading(false);
+      }
+      setLoading(false);
+      navigate(`/listings/${data._id}`);
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  console.log(formData);
   return (
     <main className="p-3 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">
         Create a Listing
       </h1>
-      <form className="flex flex-col sm:flex-row gap-4">
+      <form
+        className="flex flex-col sm:flex-row gap-4"
+        onSubmit={createListingHandler}
+      >
         <div className="flex flex-col gap-4 flex-1">
           <input
             type="text"
             placeholder="Name"
             className="border p-3 rounded-lg"
             id="name"
+            onChange={handleChange}
+            value={formData.name}
             maxLength="62"
             minLength="10"
             required
@@ -117,6 +191,8 @@ const CreateListing = () => {
             className="border p-3 rounded-lg"
             id="description"
             required
+            onChange={handleChange}
+            value={formData.description}
           />
           <input
             type="text"
@@ -124,26 +200,58 @@ const CreateListing = () => {
             className="border p-3 rounded-lg"
             id="address"
             required
+            onChange={handleChange}
+            value={formData.address}
           />
           <div className="flex gap-6 flex-wrap">
             <div className="flex gap-2">
-              <input type="checkbox" id="sale" className="w-5" />
+              <input
+                type="checkbox"
+                id="sale"
+                className="w-5"
+                onChange={handleChange}
+                checked={formData.type === "sale"}
+              />
               <span>Sell</span>
             </div>
             <div className="flex gap-2">
-              <input type="checkbox" id="rent" className="w-5" />
+              <input
+                type="checkbox"
+                id="rent"
+                className="w-5"
+                onChange={handleChange}
+                checked={formData.type === "rent"}
+              />
               <span>Rent</span>
             </div>
             <div className="flex gap-2">
-              <input type="checkbox" id="parking" className="w-5" />
+              <input
+                type="checkbox"
+                id="parking"
+                className="w-5"
+                onChange={handleChange}
+                checked={formData.parking}
+              />
               <span>Parking spot</span>
             </div>
             <div className="flex gap-2">
-              <input type="checkbox" id="furnished" className="w-5" />
+              <input
+                type="checkbox"
+                id="furnished"
+                className="w-5"
+                onChange={handleChange}
+                checked={formData.furnished}
+              />
               <span>Furnished</span>
             </div>
             <div className="flex gap-2">
-              <input type="checkbox" id="offer" className="w-5" />
+              <input
+                type="checkbox"
+                id="offer"
+                className="w-5"
+                onChange={handleChange}
+                checked={formData.offer}
+              />
               <span>Offer</span>
             </div>
           </div>
@@ -156,6 +264,8 @@ const CreateListing = () => {
                 max="10"
                 required
                 className="p-3 border border-gray-300 rounded-lg"
+                onChange={handleChange}
+                value={formData.bedrooms}
               />
               <p>Beds</p>
             </div>
@@ -167,6 +277,8 @@ const CreateListing = () => {
                 max="10"
                 required
                 className="p-3 border border-gray-300 rounded-lg"
+                onChange={handleChange}
+                value={formData.bathrooms}
               />
               <p>Baths</p>
             </div>
@@ -176,12 +288,18 @@ const CreateListing = () => {
                 id="regularPrice"
                 min="50"
                 max="10000000"
+                onChange={handleChange}
                 required
                 className="p-3 border border-gray-300 rounded-lg"
+                value={formData.regularPrice}
               />
               <div className="flex flex-col items-center">
                 <p>Regular price</p>
-                <span className="text-xs">($ / month)</span>
+                {formData.type === "rent" ? (
+                  <span className="text-xs">(₹ / month)</span>
+                ) : (
+                  ""
+                )}
               </div>
             </div>
 
@@ -191,13 +309,18 @@ const CreateListing = () => {
                 id="discountPrice"
                 min="0"
                 max="10000000"
+                onChange={handleChange}
                 required
                 className="p-3 border border-gray-300 rounded-lg"
+                value={formData.discountPrice}
               />
               <div className="flex flex-col items-center">
                 <p>Discounted price</p>
-
-                <span className="text-xs">($ / month)</span>
+                {formData.type === "rent" ? (
+                  <span className="text-xs">(₹ / month)</span>
+                ) : (
+                  ""
+                )}
               </div>
             </div>
           </div>
@@ -257,12 +380,12 @@ const CreateListing = () => {
 
           <button
             type="submit"
-            disabled={false}
+            disabled={loading || error}
             className="p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
           >
-            ADD
+            {uploading ? "Waiting..." : "Create"}
           </button>
-          <p className="text-red-700 text-sm"></p>
+          <p className="text-red-700 text-sm">{error}</p>
         </div>
       </form>
     </main>
