@@ -19,7 +19,7 @@ const Header = () => {
     if (searchTermFromUrl) {
       setSearchTerm(searchTermFromUrl);
     }
-  }, []);
+  }, [location.search]);
 
   const toggleMenuHandler = () => {
     setToggleMenu((prev) => !prev);
@@ -31,7 +31,7 @@ const Header = () => {
 
   const searchHandler = (e) => {
     e.preventDefault();
-    const urlParams = new URLSearchParams(window.location.search);
+    const urlParams = new URLSearchParams(location.search);
     urlParams.set("searchTerm", searchTerm);
     const searchQuery = urlParams.toString();
     navigate(`/search?${searchQuery}`);
