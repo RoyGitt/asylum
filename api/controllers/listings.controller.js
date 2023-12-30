@@ -49,7 +49,7 @@ export const updateListing = async (req, res, next) => {
   }
 };
 
-export const getListing = async (req, res) => {
+export const getListing = async (req, res, next) => {
   try {
     const listing = await Listing.findById({ _id: req.params.id });
     res.status(200).json(listing);

@@ -1,4 +1,3 @@
-import { ObjectId } from "mongodb";
 import User from "../models/user.model.js";
 import { errorHandler } from "../utils/error.js";
 import bcrypt from "bcrypt";
@@ -86,6 +85,22 @@ export const getUserPost = async (req, res, next) => {
     const listings = await Listing.find({ userRef: req.params.id });
 
     res.json(listings);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUser = async (req, res, next) => {
+  try {
+    const userData = await User.findById(req.params.id);
+
+    if (!userData) {
+      return next(errorHandler("404", "User does not exists"));
+    }
+
+    const { password: pass, ...modifiedUserData } = userData._doc;
+
+    res.status(200).json(modifiedUserData);
   } catch (error) {
     next(error);
   }
