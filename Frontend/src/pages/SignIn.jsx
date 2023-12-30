@@ -17,8 +17,6 @@ const SignUp = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  console.log(currentUser);
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
