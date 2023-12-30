@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import { RiMenu3Fill } from "react-icons/ri";
 import { MdOutlineClose } from "react-icons/md";
@@ -7,10 +7,34 @@ import { useSelector } from "react-redux";
 
 const Header = () => {
   const [toggleMenu, setToggleMenu] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const navigate = useNavigate();
+
   const { currentUser } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchTermFromUrl = urlParams.get("searchTerm");
+    if (searchTermFromUrl) {
+      setSearchTerm(searchTermFromUrl);
+    }
+  }, []);
 
   const toggleMenuHandler = () => {
     setToggleMenu((prev) => !prev);
+  };
+
+  const handleChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const searchHandler = (e) => {
+    e.preventDefault();
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set("searchTerm", searchTerm);
+    const searchQuery = urlParams.toString();
+    navigate(`/search?${searchQuery}`);
   };
 
   return (
@@ -22,13 +46,20 @@ const Header = () => {
             <span className="text-slate-700 ">Estate</span>
           </Link>
         </h1>
-        <form className="flex items-center bg-slate-100 w-full sm:w-64 rounded-lg p-3 ">
+        <form
+          onSubmit={searchHandler}
+          className="flex items-center bg-slate-100 w-full sm:w-64 rounded-lg p-3 "
+        >
           <input
             className=" bg-transparent focus:outline-none w-[100%]"
             type="text"
             placeholder="Search..."
+            value={searchTerm}
+            onChange={handleChange}
           />
-          <FaSearch className="text-slate-600" />
+          <button>
+            <FaSearch className="text-slate-600" />
+          </button>
         </form>
         <ul className="hidden sm:flex gap-5 items-center font-semibold text-lg text-slate-700">
           <li className="cursor-pointer ">
