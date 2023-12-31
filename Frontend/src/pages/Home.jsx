@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import SwiperCore from "swiper";
 import "swiper/css/bundle";
 import ListingItem from "../components/ListingItem";
+import heroImg from "../assets/hero.jpg";
+import { MdRocketLaunch } from "react-icons/md";
 
 export default function Home() {
   const [offerListings, setOfferListings] = useState([]);
@@ -38,9 +39,7 @@ export default function Home() {
 
     const fetchSaleListings = async () => {
       try {
-        const res = await fetch(
-          "/api/listings/get-listings??type=sale&limit=4"
-        );
+        const res = await fetch("/api/listings/get-listings?type=sale&limit=4");
         const data = await res.json();
         setSaleListings(data);
       } catch (error) {
@@ -50,57 +49,50 @@ export default function Home() {
     fetchOfferListings();
   }, []);
   return (
-    <div>
-      {/* top */}
-      <div className="flex flex-col gap-6 p-28 px-3 max-w-6xl mx-auto">
-        <h1 className="text-slate-700 font-bold text-3xl lg:text-6xl">
-          Find your next <span className="text-slate-500">perfect</span>
-          <br />
-          place with ease
-        </h1>
-        <div className="text-gray-400 text-xs sm:text-sm">
-          Sahand Estate is the best place to find your next perfect place to
-          live.
-          <br />
-          We have a wide range of properties for you to choose from.
+    <main>
+      <div className="relative h-[70vh]">
+        <div className="flex flex-col gap-12 p-[8rem] px-4 max-w-6xl mx-auto backdrop-blur-[2px] w-full h-full">
+          <h1 className="text-slate-300 font-bold text-4xl lg:text-6xl">
+            Find your next <span className="text-purple-400">perfect</span>
+            <br />
+            place with ease
+          </h1>
+          <div className="text-gray-400 text-xl  text-just flex flex-col gap-4">
+            <p>
+              Welcome to Your Dream Home! Discover exceptional living with our
+              exclusive real estate listings.
+            </p>
+            <p>
+              Explore a world of possibilities and let us guide you to your next
+              home sweet home. Start your journey today!
+            </p>
+          </div>
+          <Link
+            to={"/search"}
+            className="flex items-center gap-2 text-xl  text-slate-900 rounded-md font-bold hover:underline bg-slate-300 self-start py-2 px-3"
+          >
+            Get started <MdRocketLaunch className="text-3xl text-purple-800" />
+          </Link>
         </div>
-        <Link
-          to={"/search"}
-          className="text-xs sm:text-sm text-blue-800 font-bold hover:underline"
-        >
-          Let's get started...
-        </Link>
+
+        <div className="h-[70vh] w-full absolute inset-0 z-[-1] brightness-[20%]">
+          <img
+            src={heroImg}
+            alt=""
+            className="w-full h-full object-cover bg-top"
+          />
+        </div>
       </div>
 
-      {/* swiper */}
-      <Swiper navigation>
-        {offerListings &&
-          offerListings.length > 0 &&
-          offerListings.map((listing) => (
-            <SwiperSlide>
-              <div
-                style={{
-                  background: `url(${listing.imageUrls[0]}) center no-repeat`,
-                  backgroundSize: "cover",
-                }}
-                className="h-[500px]"
-                key={listing._id}
-              ></div>
-            </SwiperSlide>
-          ))}
-      </Swiper>
-
-      {/* listing results for offer, sale and rent */}
-
-      <div className="max-w-6xl mx-auto p-3 flex flex-col gap-8 my-10">
+      <div className="max-w-6xl mx-auto p-3 px-4 flex flex-col  mb-10">
         {offerListings && offerListings.length > 0 && (
           <div className="">
-            <div className="my-3">
-              <h2 className="text-2xl font-semibold text-slate-600">
+            <div className="my-10">
+              <h2 className="text-4xl font-semibold text-slate-300 mb-2">
                 Recent offers
               </h2>
               <Link
-                className="text-sm text-blue-800 hover:underline"
+                className="text-xl text-purple-400 hover:underline"
                 to={"/search?offer=true"}
               >
                 Show more offers
@@ -114,13 +106,13 @@ export default function Home() {
           </div>
         )}
         {rentListings && rentListings.length > 0 && (
-          <div className="">
-            <div className="my-3">
-              <h2 className="text-2xl font-semibold text-slate-600">
+          <div>
+            <div className="my-10">
+              <h2 className="text-4xl font-semibold text-slate-300 mb-2">
                 Recent places for rent
               </h2>
               <Link
-                className="text-sm text-blue-800 hover:underline"
+                className="text-xl text-purple-400 hover:underline"
                 to={"/search?type=rent"}
               >
                 Show more places for rent
@@ -134,13 +126,13 @@ export default function Home() {
           </div>
         )}
         {saleListings && saleListings.length > 0 && (
-          <div className="">
-            <div className="my-3">
-              <h2 className="text-2xl font-semibold text-slate-600">
+          <div>
+            <div className="my-10">
+              <h2 className="text-4xl font-semibold text-slate-300 mb-2">
                 Recent places for sale
               </h2>
               <Link
-                className="text-sm text-blue-800 hover:underline"
+                className="text-xl text-purple-400 hover:underline"
                 to={"/search?type=sale"}
               >
                 Show more places for sale
@@ -154,6 +146,6 @@ export default function Home() {
           </div>
         )}
       </div>
-    </div>
+    </main>
   );
 }

@@ -20,10 +20,15 @@ import {
   updateSuccess,
 } from "../redux/user/user.slice";
 import { Link, useNavigate } from "react-router-dom";
+import { RxUpdate } from "react-icons/rx";
+import { MdOutlineLibraryAdd } from "react-icons/md";
+import { MdDeleteOutline } from "react-icons/md";
+import { MdLogout } from "react-icons/md";
+import { BiSolidShow } from "react-icons/bi";
+import { FaEdit } from "react-icons/fa";
 
 const Profile = () => {
   const { currentUser, error } = useSelector((state) => state.user);
-  console.log(currentUser);
   const dispatch = useDispatch();
   const fileRef = useRef();
   const [file, setFile] = useState(null);
@@ -175,6 +180,7 @@ const Profile = () => {
       );
 
       const data = await res.json();
+      setUserListings(data);
       console.log(data);
     } catch (error) {
       console.log(error.message);
@@ -183,8 +189,10 @@ const Profile = () => {
 
   return (
     <main>
-      <section className="py-16 w-full max-w-xl mx-auto">
-        <h1 className="text-center text-3xl font-semibold mb-4">Profile</h1>
+      <section className="py-16 w-full max-w-xl mx-auto pt-40 p-4">
+        <h1 className="text-center text-6xl text-slate-300 font-semibold  ">
+          Profile
+        </h1>
         <form
           className="flex flex-col gap-4 justify-center p-4"
           onSubmit={handleSubmit}
@@ -200,7 +208,7 @@ const Profile = () => {
           <img
             src={formData.avatar || currentUser.avatar}
             alt="profile"
-            className="w-40 h-40  rounded-full self-center object-cover"
+            className="w-40 h-40  rounded-full self-center object-cover hue-rotate-60 my-10"
             onClick={() => fileRef.current.click()}
           />
           {file && (
@@ -226,7 +234,7 @@ const Profile = () => {
           <input
             type="text"
             placeholder="Username"
-            className="text-lg px-4 py-2 rounded-md  shadow-sm"
+            className="py-1 px-4 shadow-sm text-lg rounded-lg focus:outline-none bg-slate-500 placeholder:text-purple-200 text-slate-300"
             onChange={handleChange}
             id="username"
             defaultValue={currentUser.username}
@@ -234,7 +242,7 @@ const Profile = () => {
           <input
             type="email"
             placeholder="Email"
-            className="text-lg px-4 py-2 rounded-md  shadow-sm"
+            className="py-1 px-4 shadow-sm text-lg rounded-lg focus:outline-none bg-slate-500 placeholder:text-purple-200 text-slate-300"
             onChange={handleChange}
             id="email"
             defaultValue={currentUser.email}
@@ -242,39 +250,41 @@ const Profile = () => {
           <input
             type="password"
             placeholder="Password"
-            className="text-lg px-4 py-2 rounded-md  shadow-sm"
+            className="py-1 px-4 shadow-sm text-lg rounded-lg focus:outline-none bg-slate-500 placeholder:text-purple-200 text-slate-300"
             onChange={handleChange}
             id="password"
           />
           <button
-            disabled={false}
+            disabled={
+              !formData.username && !formData.email && !formData.password
+            }
             type="submit"
-            className="bg-blue-700 text-white font-semibold text-xl py-2 disabled:bg-slate-500 disabled:opacity-70"
+            className="flex items-center justify-center gap-2 bg-purple-700 text-white py-2 rounded-md text-xl uppercase hover:opacity-90 disabled:opacity-60 "
           >
-            Update
+            Update <RxUpdate />
           </button>
           <button
             disabled={false}
-            className="bg-green-500 text-white font-semibold text-xl py-2 disabled:bg-slate-500 disabled:opacity-70"
+            className="flex items-center gap-2 justify-center bg-slate-950 text-white py-2 rounded-md text-xl uppercase hover:opacity-90 disabled:opacity-60 "
             onClick={() => {
               navigate("/create-listing");
             }}
           >
-            CREATE LISTING
+            CREATE LISTING <MdOutlineLibraryAdd />
           </button>
         </form>
         <div className="flex justify-between  p-4">
           <button
-            className="bg-red-400 text-white py-2 px-4 rounded-md font-semibold"
+            className="flex items-center gap-1 bg-slate-950 text-white py-2 px-4 rounded-md font-semibold"
             onClick={deleteUserAccount}
           >
-            Delete Account
+            Delete Account <MdDeleteOutline className="text-red-500" />
           </button>
           <button
-            className="bg-red-400 text-white py-2 px-4 rounded-md font-semibold"
+            className="flex items-center gap-1 bg-slate-950 text-white py-2 px-4 rounded-md font-semibold"
             onClick={signOutHandler}
           >
-            Sign Out
+            Sign Out <MdLogout className="text-red-500" />
           </button>
         </div>
         {!error && data._id && (
@@ -289,7 +299,7 @@ const Profile = () => {
           </p>
         )}
         <button
-          className="text-green-700 w-full"
+          className="flex items-center gap-2 text-slate-950 font-semibold  text-xl px-6 py-2 rounded-3xl mt-10 bg-slate-300 w-max mx-auto"
           onClick={showUserListingsHandler}
         >
           Show Listings
@@ -299,37 +309,39 @@ const Profile = () => {
         </p>
         {userListings && showListings && userListings.length > 0 && (
           <div className="flex flex-col gap-4">
-            <h1 className="text-center mt-7 text-2xl font-semibold">
+            <h1 className="text-center text-slate-300 my-7 text-5xl font-semibold">
               Your Listings
             </h1>
             {userListings.map((listing) => (
               <div
                 key={listing._id}
-                className="border rounded-lg p-3 flex justify-between items-center gap-4"
+                className=" rounded-lg p-3 flex justify-between items-center gap-4 bg-slate-950 "
               >
                 <Link to={`/listings/${listing._id}`}>
                   <img
                     src={listing.imageUrls[0]}
                     alt="listing cover"
-                    className="h-16 w-16 object-contain"
+                    className="h-16 w-16 object-contain "
                   />
                 </Link>
                 <Link
-                  className="text-slate-700 font-semibold  hover:underline truncate flex-1"
+                  className="text-slate-300 font-semibold  hover:underline truncate flex-1"
                   to={`/listings/${listing._id}`}
                 >
                   <p>{listing.name}</p>
                 </Link>
 
-                <div className="flex flex-col item-center">
+                <div className="flex flex-col ">
                   <button
-                    className="text-red-700 uppercase"
+                    className="text-red-700 uppercase flex items-center rounded-md justify-center gap-1 bg-slate-300 font-semibold py-1 px-2 mb-2 w-full"
                     onClick={deleteListingHandler}
                   >
-                    Delete
+                    Delete <MdDeleteOutline />
                   </button>
                   <Link to={`/update-listing/${listing._id}`}>
-                    <button className="text-green-700 uppercase">Edit</button>
+                    <button className="text-green-700 uppercase flex items-center rounded-md justify-center gap-1 bg-slate-300  font-semibold py-1 px-2 w-full">
+                      Edit <FaEdit />
+                    </button>
                   </Link>
                 </div>
               </div>
@@ -337,8 +349,8 @@ const Profile = () => {
           </div>
         )}
         {userListings.length === 0 && showListings && (
-          <h1 className="text-center mt-7 text-2xl font-semibold">
-            No listing created
+          <h1 className="text-center mt-7 text-2xl font-semibold text-slate-300">
+            No listings found 🥲
           </h1>
         )}
       </section>

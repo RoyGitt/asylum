@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ListingItem from "../components/ListingItem";
+import { FaSearch } from "react-icons/fa";
+import { Gi3DGlasses } from "react-icons/gi";
 
 const Search = () => {
   const [sidebarData, setSidebarData] = useState({
@@ -135,9 +137,12 @@ const Search = () => {
     }
   };
   return (
-    <div className="flex flex-col md:flex-row">
-      <div className="p-7  border-b-2 md:border-r-2 md:min-h-screen">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+    <main className="flex flex-col md:flex-row">
+      <div className="p-7  md:min-h-screen">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-8 text-slate-300"
+        >
           <div className="flex items-center gap-2">
             <label className="whitespace-nowrap font-semibold">
               Search Term:
@@ -146,7 +151,7 @@ const Search = () => {
               type="text"
               id="searchTerm"
               placeholder="Search..."
-              className="border rounded-lg p-3 w-full"
+              className="border-none rounded-lg px-2 py-2 w-full bg-slate-500"
               onChange={handleChange}
               value={sidebarData.searchTerm}
             />
@@ -210,7 +215,7 @@ const Search = () => {
               <input
                 type="checkbox"
                 id="furnished"
-                className="w-5"
+                className="w-5 "
                 onChange={handleChange}
                 checked={sidebarData.furnished}
               />
@@ -221,7 +226,7 @@ const Search = () => {
             <label className="font-semibold">Sort:</label>
             <select
               id="sort_order"
-              className="border rounded-lg p-3"
+              className="border-none rounded-lg px-2 py-2 w-full bg-slate-500"
               onChange={handleChange}
               defaultValue="created_at_desc"
             >
@@ -231,14 +236,14 @@ const Search = () => {
               <option value="createdAt_asc">Oldest</option>
             </select>
           </div>
-          <button className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95">
-            Search
+          <button className="flex justify-center items-center gap-4 bg-slate-950 text-purple-400 font-bold tracking-widest p-3 rounded-lg uppercase hover:opacity-95 focus:scale-[0.9] hover:scale-[1.1] transition-all">
+            Search <FaSearch />
           </button>
         </form>
       </div>
       <div className="flex-1">
-        <h1 className="text-3xl font-semibold border-b p-3 text-slate-700 mt-5">
-          Listing results:
+        <h1 className="text-3xl font-semibold  text-slate-300 mt-5 flex gap-4 items-center justify-center">
+          Search Results <Gi3DGlasses className="text-purple-400" />
         </h1>
         <div className="p-7 flex flex-wrap gap-4">
           {!loading && listings.length === 0 && (
@@ -257,7 +262,7 @@ const Search = () => {
             ))}
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 export default Search;

@@ -54,29 +54,31 @@ const SignUp = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-2">
+    <main className="max-w-lg mx-auto p-4 pt-40">
       <div className="flex flex-col ">
-        <h1 className="text-4xl text-center my-[40px] font-bold">Sign In</h1>
+        <h1 className="text-6xl text-center my-[40px] font-semibold text-slate-300">
+          Sign In
+        </h1>
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <input
-            className="py-1 px-4 text-lg rounded-md focus:outline-none"
+            className="py-1 px-4 shadow-sm text-lg rounded-lg focus:outline-none bg-slate-500 placeholder:text-purple-200 text-slate-300"
             type="email"
-            placeholder="email"
+            placeholder="Email"
             id="email"
             onChange={handleChange}
             required
           />
           <input
-            className="py-1 px-4 text-lg rounded-md focus:outline-none"
+            className="py-1 px-4 shadow-sm text-lg rounded-lg focus:outline-none bg-slate-500 placeholder:text-purple-200 text-slate-300"
             type="password"
-            placeholder="password"
+            placeholder="Password"
             id="password"
             onChange={handleChange}
             required
           />
           <button
             disabled={inputError}
-            className="bg-slate-700 text-white py-2 rounded-md text-xl uppercase hover:opacity-90 disabled:opacity-60 "
+            className="bg-purple-700 text-white py-2 rounded-md text-xl uppercase hover:opacity-90 disabled:opacity-60 "
           >
             {loading ? "Loading..." : "Sign in"}
           </button>
@@ -84,13 +86,13 @@ const SignUp = () => {
         </form>
       </div>
       <div className="flex gap-1 mt-3">
-        <p>Create an account?</p>
+        <p className="text-slate-300">Create an account?</p>
         <Link to="/sign-up">
-          <span className="text-[#5352ed]">Sign Up</span>
+          <span className="text-purple-400">Sign Up</span>
         </Link>
       </div>
       {error && <p className="mt-3 text-[#eb4d4b]">{error}</p>}
-    </div>
+    </main>
   );
 };
 

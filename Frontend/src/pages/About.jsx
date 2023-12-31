@@ -2,30 +2,33 @@ import React from "react";
 
 export default function About() {
   return (
-    <div className="py-20 px-4 max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4 text-slate-800">
-        About Sahand Estate
+    <main className="py-20 pt-32 px-4 max-w-6xl mx-auto text-xl min-h-screen">
+      <h1 className="text-5xl font-bold mb-8 text-slate-300">
+        About <span className="text-purple-400">Asylum</span>
       </h1>
-      <p className="mb-4 text-slate-700">
-        Sahand Estate is a leading real estate agency that specializes in
-        helping clients buy, sell, and rent properties in the most desirable
-        neighborhoods. Our team of experienced agents is dedicated to providing
-        exceptional service and making the buying and selling process as smooth
-        as possible.
+      <p className="mb-4 text-slate-300">
+        Welcome to Asylum, your premier destination for all things real estate.
+        At the heart of our platform is a commitment to making your real estate
+        experience seamless, enjoyable, and rewarding. Let us introduce
+        ourselves and share the vision that propels us forward.
       </p>
-      <p className="mb-4 text-slate-700">
-        Our mission is to help our clients achieve their real estate goals by
-        providing expert advice, personalized service, and a deep understanding
-        of the local market. Whether you are looking to buy, sell, or rent a
-        property, we are here to help you every step of the way.
+      <p className="mb-4 text-slate-300">
+        Our mission is simple yet profound: to empower you in your real estate
+        endeavors. Whether you're buying, selling, or exploring the market, we
+        strive to be your trusted partner, providing the tools, information, and
+        support you need to make informed decisions.
       </p>
-      <p className="mb-4 text-slate-700">
+      <p className="mb-4 text-slate-300">
         Our team of agents has a wealth of experience and knowledge in the real
         estate industry, and we are committed to providing the highest level of
         service to our clients. We believe that buying or selling a property
         should be an exciting and rewarding experience, and we are dedicated to
         making that a reality for each and every one of our clients.
       </p>
-    </div>
+      <p className="mb-4 text-slate-300 italic">
+        Note: This is just dummy text and does not represent actual content. It
+        is created for illustrative purposes only.
+      </p>
+    </main>
   );
 }

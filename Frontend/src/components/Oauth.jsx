@@ -44,7 +44,7 @@ const Oauth = () => {
     <button
       type="button"
       onClick={handleGoogleAuth}
-      className="flex items-center justify-center gap-3 bg-slate-50 shadow-sm text-slate-700  py-1 rounded-md text-xl capitalize"
+      className="flex items-center mt-5 justify-center gap-3 bg-slate-50 font-semibold shadow-sm text-slate-700  py-1 rounded-md text-xl capitalize"
     >
       Continue with google <FcGoogle />
     </button>

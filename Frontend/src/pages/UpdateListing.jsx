@@ -8,6 +8,7 @@ import app from "../../firebase";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import { MdDeleteOutline } from "react-icons/md";
 
 const UpdateListing = () => {
   const [files, setFiles] = useState([]);
@@ -128,11 +129,9 @@ const UpdateListing = () => {
   };
 
   const imageDeleteHandler = (url) => {
-    console.log(url);
     const newImageUrlArray = formData.imageUrls.filter(
       (imageURL) => imageURL !== url
     );
-    console.log(newImageUrlArray);
 
     setFormData((prev) => {
       return { ...prev, imageUrls: newImageUrlArray };
@@ -199,21 +198,20 @@ const UpdateListing = () => {
     }
   };
 
-  console.log(formData);
   return (
-    <main className="p-3 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-semibold text-center my-7">
-        Create a Listing
+    <main className="p-4 max-w-4xl mx-auto min-h-screen">
+      <h1 className="font-semibold text-center my-7 mb-10 pt-20 text-5xl text-slate-300">
+        Update Listing
       </h1>
       <form
-        className="flex flex-col sm:flex-row gap-4"
+        className="flex flex-col sm:flex-row gap-4 text-slate-300"
         onSubmit={updateListingHandler}
       >
         <div className="flex flex-col gap-4 flex-1">
           <input
             type="text"
             placeholder="Name"
-            className="border p-3 rounded-lg"
+            className="py-1 px-4 shadow-sm text-lg rounded-lg focus:outline-none bg-slate-500 placeholder:text-purple-200 text-slate-300"
             id="name"
             onChange={handleChange}
             value={formData.name}
@@ -224,7 +222,7 @@ const UpdateListing = () => {
           <textarea
             type="text"
             placeholder="Description"
-            className="border p-3 rounded-lg"
+            className="py-1 px-4 shadow-sm text-lg rounded-lg focus:outline-none bg-slate-500 placeholder:text-purple-200 text-slate-300"
             id="description"
             required
             onChange={handleChange}
@@ -233,7 +231,7 @@ const UpdateListing = () => {
           <input
             type="text"
             placeholder="Address"
-            className="border p-3 rounded-lg"
+            className="py-1 px-4 shadow-sm text-lg rounded-lg focus:outline-none bg-slate-500 placeholder:text-purple-200 text-slate-300"
             id="address"
             required
             onChange={handleChange}
@@ -299,7 +297,7 @@ const UpdateListing = () => {
                 min="1"
                 max="10"
                 required
-                className="p-3 border border-gray-300 rounded-lg"
+                className="py-1 px-4 shadow-sm text-lg rounded-lg focus:outline-none bg-slate-500 placeholder:text-purple-200 text-slate-300"
                 onChange={handleChange}
                 value={formData.bedrooms}
               />
@@ -312,7 +310,7 @@ const UpdateListing = () => {
                 min="1"
                 max="10"
                 required
-                className="p-3 border border-gray-300 rounded-lg"
+                className="py-1 px-4 shadow-sm text-lg rounded-lg focus:outline-none bg-slate-500 placeholder:text-purple-200 text-slate-300"
                 onChange={handleChange}
                 value={formData.bathrooms}
               />
@@ -326,7 +324,7 @@ const UpdateListing = () => {
                 max="10000000"
                 onChange={handleChange}
                 required
-                className="p-3 border border-gray-300 rounded-lg"
+                className="py-1 px-4 shadow-sm text-lg rounded-lg focus:outline-none bg-slate-500 placeholder:text-purple-200 text-slate-300"
                 value={formData.regularPrice}
               />
               <div className="flex flex-col items-center">
@@ -347,7 +345,7 @@ const UpdateListing = () => {
                 max="10000000"
                 onChange={handleChange}
                 required
-                className="p-3 border border-gray-300 rounded-lg"
+                className="py-1 px-4 shadow-sm text-lg rounded-lg focus:outline-none bg-slate-500 placeholder:text-purple-200 text-slate-300"
                 value={formData.discountPrice}
               />
               <div className="flex flex-col items-center">
@@ -364,13 +362,13 @@ const UpdateListing = () => {
         <div className="flex flex-col flex-1 gap-4">
           <p className="font-semibold">
             Images:
-            <span className="font-normal text-gray-600 ml-2">
+            <span className="font-normal text-slate-300 ml-2">
               The first image will be the cover (max 6)
             </span>
           </p>
           <div className="flex gap-4">
             <input
-              className="p-3 border border-gray-300 rounded w-full"
+              className="p-3 text-slate-300 bg-slate-900 rounded w-full file:text-slate-300 file:bg-slate-800 file:outline-none file:border-none file:px-3 file:py-2 file:rounded-md file:mr-2"
               type="file"
               id="images"
               accept="image/*"
@@ -381,7 +379,7 @@ const UpdateListing = () => {
               type="button"
               disabled={uploading}
               onClick={imageSubmitHandler}
-              className="p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80"
+              className="p-3 text-slate-300 bg-slate-900 rounded uppercase hover:shadow-lg disabled:opacity-80"
             >
               {uploading ? "Uploading..." : "Upload"}
             </button>
@@ -393,7 +391,7 @@ const UpdateListing = () => {
           {formData.imageUrls.map((url) => {
             return (
               <div
-                className="flex justify-between p-3 border items-center"
+                className="flex justify-between p-3 items-center bg-slate-950 rounded-md"
                 key={url}
               >
                 <img
@@ -406,9 +404,9 @@ const UpdateListing = () => {
                   onClick={() => {
                     imageDeleteHandler(url);
                   }}
-                  className="p-3 text-red-700 rounded-lg uppercase hover:opacity-75"
+                  className="flex items-center gap-1 bg-red-500 text-white py-2 px-4 rounded-md font-semibold"
                 >
-                  Delete
+                  Delete <MdDeleteOutline />
                 </button>
               </div>
             );
