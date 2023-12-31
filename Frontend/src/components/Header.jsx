@@ -63,7 +63,7 @@ const Header = () => {
             onChange={handleChange}
           />
           <button>
-            <FaSearch className="text-purple-400" />
+            <FaSearch className="text-purple-200" />
           </button>
         </form>
         <ul className="hidden sm:flex gap-5 items-center font-semibold text-lg text-slate-300">
