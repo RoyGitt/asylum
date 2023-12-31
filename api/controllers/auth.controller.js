@@ -4,12 +4,34 @@ import jwt from "jsonwebtoken";
 import { errorHandler } from "../utils/error.js";
 
 export const signup = async (req, res, next) => {
-  const { username, email, password } = req.body;
-  const hashedPassword = bcrypt.hashSync(password, 10);
+  if (
+    req.body.username.trim().length === 0 ||
+    req.body.email.trim().length === 0 ||
+    req.body.password.trim().length === 0
+  ) {
+    return next(errorHandler(422, "Please provide all required information."));
+  }
   try {
+    const existingUser = await User.findOne({ username: req.body.username });
+    if (existingUser) {
+      return next(
+        errorHandler(409, "User already exists with the provided information.")
+      );
+    }
+
+    const existingEmail = await User.findOne({ email: req.body.email });
+    if (existingEmail) {
+      return next(
+        errorHandler(409, "User already exists with the provided information.")
+      );
+    }
+
+    const { username, email, password } = req.body;
+    const hashedPassword = bcrypt.hashSync(password, 10);
     const newUser = await User({ username, email, password: hashedPassword });
     await newUser.save();
-    res.status(201).json(newUser);
+    const { password: pass, ...rest } = newUser._doc;
+    res.status(201).json(rest);
   } catch (error) {
     next(error);
   }
@@ -81,5 +103,3 @@ export const signOut = (req, res) => {
     next(error);
   }
 };
-
-
