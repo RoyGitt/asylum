@@ -39,16 +39,14 @@ const SignUp = () => {
       setLoading(false);
       if (data.success === false) {
         setSubmitError(true);
-        console.log(submitError);
         setLoading(false);
+        return;
       }
       navigate("/sign-in");
     } catch (error) {
       setLoading(false);
       setSubmitError(false);
     }
-
-    console.log(submitError);
   };
 
   return (
@@ -97,7 +95,9 @@ const SignUp = () => {
           <span className="text-purple-400">Sign In</span>
         </Link>
       </div>
-      {submitError && <p className=" text-[#eb4d4b]">{data.message}</p>}
+      {submitError && (
+        <p className=" text-red-300 text-center mt-5">{data.message}</p>
+      )}
     </main>
   );
 };

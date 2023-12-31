@@ -38,6 +38,12 @@ export const signup = async (req, res, next) => {
 };
 
 export const signin = async (req, res, next) => {
+  if (
+    req.body.email.trim().length === 0 ||
+    req.body.password.trim().length === 0
+  ) {
+    return next(errorHandler(422, "Please provide all required information."));
+  }
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   try {
@@ -48,7 +54,7 @@ export const signin = async (req, res, next) => {
     const { password: pass, ...modifiedData } = user._doc;
     res
       .cookie("access_token", token, { httpOnly: true })
-      .status(200)
+      .status(201)
       .json(modifiedData);
   } catch (error) {
     next(error);

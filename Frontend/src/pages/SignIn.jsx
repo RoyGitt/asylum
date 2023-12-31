@@ -41,7 +41,7 @@ const SignUp = () => {
       });
       const data = await res.json();
       if (data.success === false) {
-        dispatch(signInFail(data.message));
+        return dispatch(signInFail(data.message));
       }
       if (data.email) {
         dispatch(signInSuccess(data));
