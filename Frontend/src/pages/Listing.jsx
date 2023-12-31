@@ -157,7 +157,7 @@ const Listing = () => {
                 {listing.furnished ? "Furnished" : "Unfurnished"}
               </li>
             </ul>
-            {listing.userRef !== currentUser._id && (
+            {listing.userRef !== currentUser?._id && (
               <>
                 {!contact && (
                   <button
@@ -169,13 +169,15 @@ const Listing = () => {
                 )}
 
                 {landlord && (
-                  <div>
+                  <div className="flex flex-col gap-8 mt-10">
                     <p>
                       Contact{" "}
-                      <span className="font-semibold">{landlord.username}</span>{" "}
+                      <span className="text-2xl font-semibold text-purple-400">
+                        {landlord.username}
+                      </span>{" "}
                       for{" "}
-                      <span className="font-semibold">
-                        {listing.name.toLowerCase()}
+                      <span className="font-bold">
+                        {listing.name.toUpperCase()}
                       </span>
                     </p>
                     {contact && (

@@ -8,15 +8,15 @@ const Contact = ({ landlord, listing }) => {
   };
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-4">
       <textarea
         name="message"
         id="message"
-        rows="2"
+        rows="4"
         value={message}
         onChange={handleChange}
         placeholder="Enter your message here..."
-        className="w-full border p-3 rounded-lg"
+        className="py-1 px-4 shadow-sm text-lg rounded-lg focus:outline-none bg-slate-500 placeholder:text-purple-200 text-slate-300"
       />
       <Link
         to={`mailto:${landlord.email}?subject=Regarding ${listing.name}&body=${message}`}
