@@ -9,7 +9,7 @@ export const test = (req, res) => {
 
 export const updateUser = async (req, res, next) => {
   if (req.user.id !== req.params.id)
-    return next(errorHandler(401, "You can only update your own account!"));
+    return next(errorHandler(401, "You can only update your own account 😂"));
 
   if (
     !req.body.username &&
@@ -70,7 +70,7 @@ export const deleteUser = async (req, res, next) => {
   try {
     await User.findByIdAndDelete(req.params.id);
     res.clearCookie("access_token");
-    res.status(200).json({ message: "Successfully Deleted" });
+    res.status(204).json({ message: "Successfully Deleted" });
   } catch (error) {
     next(error);
   }
@@ -84,7 +84,7 @@ export const getUserPost = async (req, res, next) => {
   try {
     const listings = await Listing.find({ userRef: req.params.id });
 
-    res.json(listings);
+    res.status(200).json(listings);
   } catch (error) {
     next(error);
   }

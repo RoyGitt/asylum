@@ -305,7 +305,11 @@ const Profile = () => {
           Show Listings
         </button>
         <p className="text-red-700 mt-5">
-          {showListingsError && "Error showing listings"}
+          {showListingsError && (
+            <p className="text-red-300 text-center mt-5">
+              Error showing listings
+            </p>
+          )}
         </p>
         {userListings && showListings && userListings.length > 0 && (
           <div className="flex flex-col gap-4">

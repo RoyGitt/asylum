@@ -54,7 +54,7 @@ export const signin = async (req, res, next) => {
     const { password: pass, ...modifiedData } = user._doc;
     res
       .cookie("access_token", token, { httpOnly: true })
-      .status(201)
+      .status(200)
       .json(modifiedData);
   } catch (error) {
     next(error);
@@ -70,7 +70,7 @@ export const google = async (req, res, next) => {
       const { password: pass, ...modifiedData } = user._doc;
       return res
         .cookie("access_token", token, { httpOnly: true })
-        .status(200)
+        .status(201)
         .json(modifiedData);
     }
     const generatedPassword =
@@ -90,7 +90,7 @@ export const google = async (req, res, next) => {
     const { password: newPass, ...newUserData } = newUser._doc;
     res
       .cookie("access_token", token, { httpOnly: true })
-      .status(201)
+      .status(200)
       .json(newUserData);
   } catch (error) {
     next(error);
@@ -104,7 +104,7 @@ export const signOut = (req, res) => {
     );
   try {
     res.clearCookie("access_token");
-    res.json({ message: "Signed out successfully" });
+    res.status(204).json({ message: "Signed out successfully" });
   } catch (error) {
     next(error);
   }
